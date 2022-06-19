@@ -17,26 +17,26 @@ BOOL GetProcessListAll()
 	HANDLE h_process_snap;
 	PROCESSENTRY32 pe32;
 
-	// Take a snapshot of all processes in the system.
+	// Chụp lại các tiến trình
 	h_process_snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (h_process_snap == INVALID_HANDLE_VALUE)
 	{
-		printf("CreateToolhelp32Snapshot Fail %d\n", GetLastError());
+		printf("CreateToolhelp32Snapshot Fail %d\n", GetLastError()); //Chụp lại các tiến trình
 		return FALSE;
 	}
 
 	// Set the size of the structure before using it.
 	pe32.dwSize = sizeof(PROCESSENTRY32);
 
-	// Retrieve information about the first process,
-	// and exit if unsuccessful
+	// Kiểm tra process đầu tiên
+	// thoát nếu ...
 	if (!Process32First(h_process_snap, &pe32))
 	{
-		printf("Process32First Fail %d\n", GetLastError()); // show cause of failure
-		CloseHandle(h_process_snap);          // clean the snapshot object
+		printf("Process32First Fail %d\n", GetLastError()); // chỉ ra lỗi
+		CloseHandle(h_process_snap);          // clean snapshot
 		return FALSE;
 	}
-	// Retrieve the priority class.
+	
 	printf("%-50s%-20s%-20s\n", "Process Name", "Process ID", "Parent Process ID");
 	printf("%-50s%-20s%-20s\n", "----------------------------------", "----------", "-----------");
 	do
