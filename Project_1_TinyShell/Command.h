@@ -25,19 +25,19 @@
 
 
 /* Các câu lệnh thực hiện command */
-int cd(char **args);
-int cls(char **args);
-int dir(char **args);
-int echo(char **args);
-int exit(char **args);
-int help(char **args);
-int mk_dir(char **args);
-int del(char **args);
-int date(char **args);
-int time_cmd(char **args);
-int pc(char **args);
-int calc(char **args);
-int runbat(char **args);
+int f_cd(char **args); // giống cd trong cmd
+int f_cls(char **args); // clear 
+int f_dir(char **args); // directory
+int f_echo(char **args); // in ra lại câu nhập vào // còn lỗi
+int f_exit(char **args); // thoát
+int f_help(char **args); // hỗ trợ các câu lệnh
+int f_mkdir(char **args); // tạo folder
+int f_del(char **args); // xóa 1 mục hoặc folder
+int f_date(char **args); // trả về ngày, tháng, năm
+int f_time(char **args); // 
+int f_pc(char **args);
+int f_calc(char **args);
+int f_run(char **args);
 bool cmdCheck(char **args);
 
 

@@ -36,19 +36,19 @@ const char *command[] = {
 
 /* Mảng các lệnh command*/
 int (*activate_command[])(char **) = { 
-  &cd,
-  &cls,
-  &echo,
-  &exit,
-  &help,
-  &del,
-  &dir,
-  &mk_dir,
-  &date,
-  &time_cmd,
-  &pc,
-  &calc,
-  &runbat	  
+  &f_cd,
+  &f_cls,
+  &f_echo,
+  &f_exit,
+  &f_help,
+  &f_del,
+  &f_dir,
+  &f_mkdir,
+  &f_date,
+  &f_time,
+  &f_pc,
+  &f_calc,
+  &f_run	  
 }; 
 
 /**
@@ -85,7 +85,7 @@ int size_of_command(){
 ////////// Danh sách câu lệnh //////////// 
 //////////////////////////////////////////
 
-int help(char **args){
+int f_help(char **args){
     if (args[1] == NULL)
 	{
 		printf("Type \"help -[command]\" for more information about a specific command.\n");
@@ -200,7 +200,7 @@ int help(char **args){
  * cd [path]: chuyển current working directory sang directory mới
  * 
  **/
-int cd(char **args){
+int f_cd(char **args){
     /**
      * Chuyển directory hiện tại sang directory mới
      * Câu lệnh: cd [path] 
@@ -231,14 +231,13 @@ int cd(char **args){
  * Câu lệnh: dir [path] 
  * 
  **/
-int dir(char **args){
+int f_dir(char **args){
     /**
      * Liệt kê các folder, file trong directory 
      * Câu lệnh: dir [path] 
      * 
      **/
     
-    /* Đống này chôm chỉa về sửa một chút t cx chưa hiểu hết :)))))) */
     char *cur_dir = (char*)malloc(MAX_CWD_LENS*sizeof(char));
     GetCurrentDirectory(MAX_CWD_LENS, cur_dir);
 	WIN32_FIND_DATA data;
@@ -304,7 +303,7 @@ int dir(char **args){
  * Câu lệnh: mkdir [foldername]
  * 
  **/
-int mk_dir(char **args){
+int f_mkdir(char **args){
     /**
      * Tạo folder trong directory hiện tại
      * Câu lệnh: mkdir [foldername]
@@ -326,7 +325,7 @@ int mk_dir(char **args){
  * Câu lệnh: echo [message]
  *  
  **/
-int echo(char **args){
+int f_echo(char **args){
     /**
      * In ra message đi kèm với echo
      * Câu lệnh: echo [message]
@@ -351,7 +350,7 @@ int echo(char **args){
  * Clear toàn màn hình console
  * Câu lệnh: cls
  **/
-int cls(char **args){ 
+int f_cls(char **args){ 
     /**
      * Clear toàn màn hình console
      * Câu lệnh: cls
@@ -405,7 +404,7 @@ int cls(char **args){
  * Câu lệnh: date
  * 
  **/
-int date(char **args){
+int f_date(char **args){
     if (args[1] != NULL)
 	{
 		cout << "Command \"date\" does not support any option !\n";
@@ -426,7 +425,7 @@ int date(char **args){
  * Câu lệnh: time
  * 
  */
-int time_cmd(char **args){
+int f_time(char **args){
     if (args[1] != NULL)
 	{
 		cout << "Command \"time\" does not support any option !\n";
@@ -443,7 +442,7 @@ int time_cmd(char **args){
  * Câu lệnh: del [file/foldername]
  *  
  **/
-int del(char **args){
+int f_del(char **args){
     /**
      * Delete file hoặc folder
      * Câu lệnh: del [file/foldername]
@@ -473,7 +472,7 @@ int del(char **args){
  * Câu lệnh: exit
  * 
  **/
-int exit(char **args){
+int f_exit(char **args){
     /**
      * Thoát chương trình
      * Câu lệnh: exit
@@ -496,7 +495,7 @@ int exit(char **args){
  * Câu lệnh: pc (Process)
  * 
  **/
-int pc(char **args) {
+int f_pc(char **args) {
     if (args[1] == NULL) {
         cout << "ERROR: Too few argument" << endl;
         return 0;
@@ -579,7 +578,7 @@ int pc(char **args) {
 }
 
 
-int calc(char **args){
+int f_calc(char **args){
     system("calc");
     return 0;
 }
@@ -612,7 +611,7 @@ bool cmdCheck(char **args){
  * 
  **/
 
-int runbat(char **args){
+int f_run(char **args){
     char w[255],a[255];
     char *run_file = combinePath(args, 1);
     FILE *f=fopen(run_file,"rt");

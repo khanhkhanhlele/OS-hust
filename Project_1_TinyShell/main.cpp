@@ -1,26 +1,12 @@
-/******************************************************************
- * ------------------- WELCOME TO OUR TINYSHELL -------------------
- *      @author: Le Trong Khanh, 
- *               Pham Van Linh, 
- *               Nguyen Van An, 
- *               Ha Manh Hung, 
- *               Le Hong Ung
- *      @name of Program: Tiny Shell
- *      @IT1-01-K64
- *      @05-06-2021
- * ----------------------------------------------------------------
- ******************************************************************/
-
 #include "Analyse.cpp"
 #include "Command.cpp"
 #include "Process.cpp"
 using namespace std;
 
-
 int main (int argc, char** argv) {
     char cur_dir[MAX_CWD_LENS];
-    /* Ctrl + C => STOP */
-    signal(SIGINT, sighandler);
+    // /* Ctrl + C => STOP */
+    /*signal(SIGINT, sighandler);
 
     /* set màu chữ cho shell */
     char color[] = "green";
