@@ -66,6 +66,7 @@ int execute(char ** args){
             return (*activate_command[i])(args);
         }
     }
+    cout << "'" << args[0] << "'" <<" is not recognized as an internal or external command, operable program or batch file.\n";
     return 0;
 }
 
@@ -89,7 +90,7 @@ int f_help(char **args){
     if (args[1] == NULL)
 	{
 		printf("Type \"help -[command]\" for more information about a specific command.\n");
-		printf("Suppoted commands:\n cd\n date\n time\n dir\n cls\n echo\n del\n mkdir\n ps\n exit\n ");
+		printf("Suppoted commands:\n cd\n date\n time\n dir\n cls\n echo\n del\n mkdir\n pc\n exit\n ");
 		printf("Usage:\n\t <command> [option]\n\tEXAMPLE: help cd\n");
 		printf("%-30s%s\n%-30s%s", " cd",
 			"Change the current directory. You must write the new directory after this command.",

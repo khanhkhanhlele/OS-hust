@@ -36,6 +36,7 @@ int main (int argc, char** argv) {
         
         stop = execute(args); /* Thực hiện lệnh, trả về 0 nếu tiếp tục, trả về 1 để thoát*/
         free(args); /*Giải phóng các con trỏ lệnh*/
+        printf("\n");
     }
     free(cmd); /*Giải phóng lệnh*/
 
