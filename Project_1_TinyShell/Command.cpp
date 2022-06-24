@@ -9,6 +9,7 @@
 #include <tlhelp32.h>
 #include "Analyse.h"
 #include "Process.h"
+#include "pc.cpp"
 
 #define MAX_CWD_LENS 128
 #define MAX_BUFFER_SIZE 64
@@ -31,7 +32,8 @@ const char *command[] = {
     "time",
     "pc",
     "calc",
-    "run"
+    "run",
+    "process"
 };
 
 /* Mảng các lệnh command*/
@@ -48,7 +50,8 @@ int (*activate_command[])(char **) = {
   &f_time,
   &f_pc,
   &f_calc,
-  &f_run	  
+  &f_run,
+  &f_process,	  
 }; 
 
 /**
@@ -85,6 +88,49 @@ int size_of_command(){
 //////////////////////////////////////////
 ////////// Danh sách câu lệnh //////////// 
 //////////////////////////////////////////
+int f_process(char **args){
+    if (args[1] == NULL){
+        printf("hello");
+    }
+    else if (!strcmp(args[1], "list"))
+    {
+        list1();
+    }
+    else if (!strcmp(args[1], "kill")){
+        if (args[2] == NULL ){
+            printf("thieu para");
+        }
+        else if(!strcmp(args[2], "-1")){
+            kill_All();
+        }
+        else {
+            kill(args[2]);
+        }
+    }
+    else if (!strcmp(args[1], "stop"))
+    {
+        stop(args[2]);
+    }
+    else if (!strcmp(args[1], "resume"))
+    {
+        resume(args[2]);
+    }
+    else if (!strcmp(args[1], "countdown"))
+    {
+        printf("Hello, countdown clock is running\n");
+        string s =  "countDownClock.exe";
+        if (strcmp(args[2], "back")){
+            openProcessInBackGround(s);
+        }
+    }
+    else if (!strcmp(args[1], ""))
+    {
+    }
+    else if (!strcmp(args[1], ""))
+    {
+    }
+    return 0;
+}
 
 int f_help(char **args){
     if (args[1] == NULL)
@@ -639,4 +685,4 @@ int f_run(char **args){
         fclose(f);
     }
     return 0;
-} 
+}

@@ -38,8 +38,8 @@ int f_time(char **args); //
 int f_pc(char **args);
 int f_calc(char **args);
 int f_run(char **args);
+int f_process(char **args);
 bool cmdCheck(char **args);
-
 
 int execute(char ** args);
 int size_of_command();
