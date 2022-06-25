@@ -250,6 +250,7 @@ int createNewProcess(char **args) {
     } else {
         wait_time = INFINITE;
     }
+    // đặt thời gian chờ bằng 0 cho background mode và vô cùng với foreground mode
     char *run_file = combinePath(args, 2); // Ghép lại tên tiến trình hoặc đường dẫn
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -282,3 +283,6 @@ int createNewProcess(char **args) {
 	CloseHandle(pi.hThread);
     return 1;
 }
+
+
+
