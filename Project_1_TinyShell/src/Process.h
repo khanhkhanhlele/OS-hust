@@ -21,7 +21,7 @@
 
 
 /* Các câu lệnh liên quan đến tiến trình */
-int findProcessID(char *name_process);
+int findProcess(char *name_process);
 int getProcessListAll();
 int killProcessID(DWORD process_id);
 int killProcess(char *name_process);

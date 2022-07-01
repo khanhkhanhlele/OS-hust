@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <psapi.h>
 #include <tlhelp32.h>
+#include <direct.h>
 #include "Analyse.h"
 #include "Process.h"
 
@@ -90,7 +91,7 @@ int f_help(char **args){
     if (args[1] == NULL)
 	{
 		printf("Type \"help -[command]\" for more information about a specific command.\n");
-		printf("Suppoted commands:\n cd\n date\n time\n dir\n cls\n echo\n del\n mkdir\n pc\n exit\n ");
+		//printf("Suppoted commands:\n cd\n date\n time\n dir\n cls\n echo\n del\n mkdir\n pc\n exit\n ");
 		printf("Usage:\n\t <command> [option]\n\tEXAMPLE: help cd\n");
 		printf("%-30s%s\n%-30s%s", " cd",
 			"Change the current directory. You must write the new directory after this command.",
@@ -116,21 +117,21 @@ int f_help(char **args){
         printf("%-30s%s\n%-30s%s", " mkdir",
 			"Make a new directory.",
             " ", "EXAMPLES: \"mkdir[Foldername]\"\n\n");
-	printf("%-30s%s\n%-30s%s", " run",
+	    printf("%-30s%s\n%-30s%s", " run",
 			"Run .bat file only.",
             " ", "EXAMPLES: \"run [filename.bat]\"\n\n");
         printf("%-30s%s\n%-30s%s\n%-30s%s", " pc",
             "Create process.", " ",
             "You must enter the options in the 2nd argument, such as f and b",
             " ", "EXAMPLES: \"pc bg\"\n\n");
-		printf("%-30s%s", " exit", "Exit this tiny shell :((((\n");
+		printf("%-30s%s", " exit", "Exit this tiny shell \n");
 	}
     else if(!strcmp(args[1],"cd")){
         cout << "Change the current directory." << endl;
         cout << "       cd           : Show the current directory" << endl;
         cout << "       cd ..        : Show the parent directory of the current directory" << endl;
         cout << "       cd [path]    : Change the current directory to [path]" << endl;
-        cout << "EXAMPLE: cd C:\\Users\\Admin\\ => change current directory to C:\\User\\Admin" << endl;
+        cout << "EXAMPLE: cd C:\\Users\\X1 carbon\\ => change current directory to C:\\User\\X1 carbon" << endl;
     }
     else if(!strcmp(args[1],"date")){
         cout << "Display the current date to screen." << endl;
@@ -143,8 +144,7 @@ int f_help(char **args){
     else if(!strcmp(args[1],"dir")){
         cout << "Display the list of files and folder in the directory to the screen." << endl;
         cout << "       dir         : Show the files and folders in the current directory" << endl;
-        cout << "       dir [path]  : Show the files and folders in the [path]" << endl;
-        cout << "EXAMPLE: \"dir\", \"dir C:\\Users\\Admin\"" << endl;
+        cout << "EXAMPLE: \"dir\"" << endl;
     }
     else if(!strcmp(args[1],"cls")){
         cout << "Clear all line displaying on the console screen." << endl;
@@ -175,7 +175,7 @@ int f_help(char **args){
     }
     else if(!strcmp(args[1],"pc")){
         cout << "Supported options:" << endl;
-        cout << "        all     Show list of all running processes" << endl;
+        cout << "        list    Show list of all running processes" << endl;
 		cout << "        find    Get pid of specific program(s) by name" << endl;
 		cout << "        suspend Suspend a program by process id" << endl;
 		cout << "        resume  Resume a program by process id" << endl;
@@ -202,16 +202,9 @@ int f_help(char **args){
  * 
  **/
 int f_cd(char **args){
-    /**
-     * Chuyển directory hiện tại sang directory mới
-     * Câu lệnh: cd [path] 
-     * cd : trả về đường dẫn directory hiện tại 
-     * cd .. :trả về đường dẫn directory cha
-     * cd [path]: chuyển current working directory sang directory mới
-     * 
-     **/
+   
     if(args[1] == NULL){ /* Nếu chỉ gõ lệnh cd */
-        system("cd"); /* Dùng luôn lệnh cd có sẵn của Windows (Chơi bẩn nhưng kệ) */
+        system("cd"); /* Dùng luôn lệnh cd có sẵn của Windows */
         cout << endl;
         return EXIT_SUCCESS;
     }
@@ -229,76 +222,52 @@ int f_cd(char **args){
 
 /**
  * Liệt kê các folder, file trong directory 
- * Câu lệnh: dir [path] 
+ * Câu lệnh: dir
  * 
  **/
 int f_dir(char **args){
     /**
-     * Liệt kê các folder, file trong directory 
-     * Câu lệnh: dir [path] 
-     * 
+     * Liệt kê các folder, file trong directory
+     * Câu lệnh: dir [path]
+     *
      **/
-    
-    char *cur_dir = (char*)malloc(MAX_CWD_LENS*sizeof(char));
-    GetCurrentDirectory(MAX_CWD_LENS, cur_dir);
-	WIN32_FIND_DATA data;
-	_FILETIME time_lastwrite;
-	_SYSTEMTIME convert_time;
-	string date;
-	string time;
-	char *char_date = (char *)calloc(15, sizeof(char));
-	char *char_time = (char *)calloc(15, sizeof(char));
-	const char add[] = "\\*";
-    char *path = (char*)malloc(MAX_CWD_LENS*sizeof(char));
-    if(args[1] == NULL){
-        strcpy(path, cur_dir);
-        strcat(path,"\\*");
-    }
-    else {
-        path = combinePath(args,1);
-        strcat(path,"\\*");
-    }
-	HANDLE han = FindFirstFile(path, &data);
-	printf("%-15s%-15s%-15s%-15s\n", "Date", "Time", "Type", "Name");
-	printf("=========================================================================\n");
-	if (han != INVALID_HANDLE_VALUE)
-	{
-		do
-		{
-			time_lastwrite = data.ftLastWriteTime;
-			FileTimeToSystemTime(&time_lastwrite, &convert_time);
+    // char *buffer;
 
-			// Convert date, time to string & char *
-			date = to_string(convert_time.wDay) + '/' + to_string(convert_time.wMonth) + '/' + to_string(convert_time.wYear);
-			time = to_string(convert_time.wHour) + ':' + to_string(convert_time.wMinute);
-			strcpy(char_date, date.c_str());
-			strcpy(char_time, time.c_str());
+    // // Get the current working directory:
 
-			if (data.dwFileAttributes == FILE_ATTRIBUTE_ARCHIVE)
-			{
-				printf("%-15s%-15s%-15s%-15s\n", char_date, char_time, "<FILE>", data.cFileName);
-			}
-			if (data.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
-			{
-				printf("%-15s%-15s%-15s%-15s\n", char_date, char_time, "<FOLDER>", data.cFileName);
-			}
-		} while (FindNextFileA(han, &data) != 0);
-        delete cur_dir;
-		FindClose(han);
-		delete char_time;
-		delete char_date;
-		return EXIT_SUCCESS;
-	}
-	else
-	{
-        delete cur_dir;
-        delete char_time;
-		delete char_date;
-		return EXIT_FAILURE;
-	}
+    // if ((buffer = _getcwd(NULL, 0)) == NULL)
+    //     perror("_getcwd error");
+    // else
+    // {
+    //     //        printf("%s \n", buffer);
+    // }
+    // if (_chdir(buffer))
+    // {
+    //     switch (errno)
+    //     {
+    //     case ENOENT:
+    //         printf("No such file or directory.\n");
+    //         break;
+    //     case EINVAL:
+    //         printf("Invalid buffer.\n");
+    //         break;
+    //     default:
+    //         printf("Unknown error.\n");
+    //         break;
+    //     }
+    // }
+    // else
+    //     system("dir");
+
+    // free(buffer);
+
+    char *buffer;
+    if ((buffer = _getcwd(NULL, 0)) == NULL)
+        cout << "_getcwd error";
+    system("dir");
+    free(buffer);
+    return 0;
 }
-
-
 /**
  * Tạo folder trong directory hiện tại
  * Câu lệnh: mkdir [foldername]
@@ -355,47 +324,48 @@ int f_cls(char **args){
     /**
      * Clear toàn màn hình console
      * Câu lệnh: cls
-     * 
-     * Cũng chôm chỉa về nốt :)))
      **/
     
-    if(strcmp(args[0],"cls") == 0){
-        HANDLE hConsole; 
-        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        SMALL_RECT scrollRect;
-        COORD scrollTarget;
-        CHAR_INFO fill;
+    // if(strcmp(args[0],"cls") == 0){
+    //     HANDLE hConsole; 
+    //     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    //     CONSOLE_SCREEN_BUFFER_INFO csbi;
+    //     SMALL_RECT scrollRect;
+    //     COORD scrollTarget;
+    //     CHAR_INFO fill;
 
-        // Get the number of character cells in the current buffer.
-        if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
-        {
-            return 0;
-        }
+    //     // Get the number of character cells in the current buffer.
+    //     if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    //     {
+    //         return 0;
+    //     }
 
-        // Scroll the rectangle of the entire buffer.
-        scrollRect.Left = 0;
-        scrollRect.Top = 0;
-        scrollRect.Right = csbi.dwSize.X;
-        scrollRect.Bottom = csbi.dwSize.Y;
+    //     // Scroll the rectangle of the entire buffer.
+    //     scrollRect.Left = 0;
+    //     scrollRect.Top = 0;
+    //     scrollRect.Right = csbi.dwSize.X;
+    //     scrollRect.Bottom = csbi.dwSize.Y;
 
-        // Scroll it upwards off the top of the buffer with a magnitude of the entire height.
-        scrollTarget.X = 0;
-        scrollTarget.Y = (SHORT)(0 - csbi.dwSize.Y);
+    //     // Scroll it upwards off the top of the buffer with a magnitude of the entire height.
+    //     scrollTarget.X = 0;
+    //     scrollTarget.Y = (SHORT)(0 - csbi.dwSize.Y);
 
-        // Fill with empty spaces with the buffer's default text attribute.
-        fill.Char.UnicodeChar = TEXT(' ');
-        fill.Attributes = csbi.wAttributes;
+    //     // Fill with empty spaces with the buffer's default text attribute.
+    //     fill.Char.UnicodeChar = TEXT(' ');
+    //     fill.Attributes = csbi.wAttributes;
 
-        // Do the scroll
-        ScrollConsoleScreenBuffer(hConsole, &scrollRect, NULL, scrollTarget, &fill);
+    //     // Do the scroll
+    //     ScrollConsoleScreenBuffer(hConsole, &scrollRect, NULL, scrollTarget, &fill);
 
-        // Move the cursor to the top left corner too.
-        csbi.dwCursorPosition.X = 0;
-        csbi.dwCursorPosition.Y = 0;
+    //     // Move the cursor to the top left corner too.
+    //     csbi.dwCursorPosition.X = 0;
+    //     csbi.dwCursorPosition.Y = 0;
 
-        SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
-    }
+    //     SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
+    // }
+    // return 0;
+    system("cls");
+    //greed();
     return 0;
 }
 
@@ -501,7 +471,7 @@ int f_pc(char **args) {
         cout << "ERROR: Too few argument" << endl;
         return 0;
     }
-    if (strcmp(args[1], "all") == 0) {
+    if (strcmp(args[1], "list") == 0) {
         if (getProcessListAll()) {
             return 0;
         }
@@ -514,7 +484,7 @@ int f_pc(char **args) {
 			return 0;
 		}
 		// Tìm ID Process
-		if (findProcessID(args[2]))
+		if (findProcess(args[2]))
 			return 0;
         return 1;
 	}

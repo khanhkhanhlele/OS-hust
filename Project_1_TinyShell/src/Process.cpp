@@ -30,10 +30,6 @@ HANDLE hForeProcess;
  * Đón tín hiệu ngắt Ctrl + C
  **/
 void sighandler(int signum) {
-    /**
-     * Đón tín hiệu ngắt Ctrl + C
-     **/
-    // printf("Caught signal %d, coming out...\n", signum);
     if (hForeProcess != NULL) {
         TerminateProcess(hForeProcess, 0);
         hForeProcess = NULL;
@@ -44,7 +40,7 @@ void sighandler(int signum) {
 /**
  * In ra các tiến trình đang hoạt động
  * In ra màn hình tên tiến trình, Process ID, Parent PID
- * Câu lệnh: pc all
+ * Câu lệnh: pc list
  * 
  **/
 int getProcessListAll() {
@@ -57,9 +53,9 @@ int getProcessListAll() {
         cout << "ERROR: CreateToolhelp32Snapshot Fail " << GetLastError() << endl;
         return 0;
     }
-
+    // Set the size of the structure before using it.
     pe32.dwSize = sizeof(PROCESSENTRY32);
-    // Kiểm tra thằng đầu tiên
+    // Kiểm tra cái đầu tiên
     if (!Process32First(hProcessSnap, &pe32)) {
         // Nếu lỗi in ra...
         cout << "ERROR: Process32First Fail " << GetLastError() << endl;
@@ -69,6 +65,8 @@ int getProcessListAll() {
 	printf("%-50s%-20s%-20s\n", "----------------------------------", "----------", "-----------");    
     
     do {
+        // Now walk the snapshot of processes, and
+        // display information about each process in turn
         printf("%-50s%-20d%-20d\n", pe32.szExeFile, pe32.th32ProcessID, pe32.th32ParentProcessID);
     } while (Process32Next(hProcessSnap, &pe32));
     CloseHandle(hProcessSnap);
@@ -81,7 +79,7 @@ int getProcessListAll() {
  * Câu lệnh pc find [name_process]
  * 
  **/
-int findProcessID(char *name_process) {
+int findProcess(char *name_process) {
     HANDLE hProcessSnap;
     PROCESSENTRY32 pe32; // Cấu trúc của tiến trình khi được gọi snap
 
@@ -111,7 +109,7 @@ int findProcessID(char *name_process) {
 
 /**
  * Đóng tiến trình bằng Process ID 
- * Câu lệnh: pc kill [process_id]
+ * Câu lệnh: pc killid [process_id]
  * 
  **/
 
@@ -185,7 +183,7 @@ int suspendProcess(DWORD process_id) {
 	}
 	// Duyệt các luồng khác
 	do {
-        // Kiểm tra xem các luồng này có thuộc tiến trình cần dừng không
+        // Kiểm tra xem tiến trình nào là tiến trình cần dừng không
 		if (th32.th32OwnerProcessID == process_id) {
 			hthread = OpenThread(THREAD_ALL_ACCESS, FALSE, th32.th32ThreadID); // Mở một luồng đang chạy
 			// Đình chỉ luồng đó
@@ -223,10 +221,10 @@ int resumeProcess(DWORD process_id) {
 	}
 	// Duyệt các luồng khác
 	do {
-        // Kiểm tra xem các luồng này có thuộc tiến trình cần dừng không
+        // Kiểm tra xem các luồng này có process_id không
 		if (th32.th32OwnerProcessID == process_id) {
 			hthread = OpenThread(THREAD_ALL_ACCESS, FALSE, th32.th32ThreadID); // Mở một luồng đang chạy
-			// Đình chỉ luồng đó
+			// tiếp tục chạy luồng đó
             if (ResumeThread(hthread) == -1) {
 				return 0;
 			}
