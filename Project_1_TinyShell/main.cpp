@@ -1,6 +1,6 @@
 #include "src/Analyse.cpp"
 #include "src/Command.cpp"
-#include "src/Process.cpp"
+#include "src/Process2.cpp"
 using namespace std;
 
 int main (int argc, char** argv) {

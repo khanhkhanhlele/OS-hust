@@ -9,7 +9,7 @@
 #include <tlhelp32.h>
 #include <direct.h>
 #include "Analyse.h"
-#include "Process.h"
+#include "Process2.h"
 
 #define MAX_CWD_LENS 128
 #define MAX_BUFFER_SIZE 64
@@ -473,6 +473,12 @@ int f_pc(char **args) {
     }
     if (strcmp(args[1], "list") == 0) {
         if (getProcessListAll()) {
+            return 0;
+        }
+        return 1;
+    }
+    if (strcmp(args[1], "l") == 0) {
+        if (list()) {
             return 0;
         }
         return 1;
