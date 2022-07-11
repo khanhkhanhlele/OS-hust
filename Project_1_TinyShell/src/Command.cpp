@@ -9,7 +9,7 @@
 #include <tlhelp32.h>
 #include <direct.h>
 #include "Analyse.h"
-#include "Process2.h"
+#include "Process.h"
 #include "Env.h"
 
 #define MAX_CWD_LENS 128
@@ -190,7 +190,8 @@ int f_help(char **args){
     }
     else if(!strcmp(args[1],"pc")){
         cout << "Supported options:" << endl;
-        cout << "        list    Show list of all running processes" << endl;
+        cout << "        all     Show list of all running processes" << endl;
+        cout << "        list    Show list of backgroud running processes" << endl;
 		cout << "        find    Get pid of specific program(s) by name" << endl;
 		cout << "        suspend Suspend a program by process id" << endl;
 		cout << "        resume  Resume a program by process id" << endl;

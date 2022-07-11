@@ -10,7 +10,7 @@
 #include <tlhelp32.h>
 #include "Analyse.h"
 #include "Command.h"
-#include "Process2.h"
+#include "Process.h"
 using namespace std;
 
 #define MAX_CWD_LENS 128

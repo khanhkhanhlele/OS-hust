@@ -1,6 +1,6 @@
 #include "src/Analyse.cpp"
 #include "src/Command.cpp"
-#include "src/Process2.cpp"
+#include "src/Process.cpp"
 #include "src/Env.cpp"
 
 using namespace std;
