@@ -25,6 +25,6 @@ void setColor(char* color);
 char **separate_line(char *line);
 
 char *combinePath(char **args, int start);
-
+void printTime();
 
 #endif

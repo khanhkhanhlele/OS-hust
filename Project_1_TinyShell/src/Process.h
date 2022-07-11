@@ -19,7 +19,6 @@
 #define MAX_TOK_BUFSIZE 64
 #define TOKEN_DELIMETERS " \t\r\n\a"
 
-
 /* Các câu lệnh liên quan đến tiến trình */
 int findProcess(char *name_process);
 int getProcessListAll();
@@ -28,5 +27,7 @@ int killProcess(char *name_process);
 int suspendProcess(DWORD process_id);
 int resumeProcess(DWORD process_id);
 int createNewProcess(char **args);
+string format(string s, unsigned long long len);
+int list();
 
 #endif

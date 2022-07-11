@@ -137,7 +137,7 @@ char *combinePath(char **args, int start){
 
 
 /**
- * Đổi màu chữ (Có thể có hoặc k cơ bản là cũng k có ảnh hưởng gì chỉ là trang trí )
+ * Đổi màu chữ 
  * 
  **/
 void setColor(char* color) {
@@ -155,4 +155,16 @@ void setColor(char* color) {
     if (strcmp(color,"green")==0) {
       SetConsoleTextAttribute(hConsole,FOREGROUND_GREEN | FOREGROUND_INTENSITY);
     }
+}
+
+void printTime()
+{
+    time_t now;
+    struct tm *localTime;
+    time(&now);
+    localTime = localtime(&now);
+    int h = localTime->tm_hour;
+    int m = localTime->tm_min;
+    int s = localTime->tm_sec;
+    cout << "------------------" << (h >= 10 ? to_string(h) : ("0" + to_string(h))) << ":" << (m >= 10 ? to_string(m) : ("0" + to_string(m))) << ":" << (s >= 10 ? to_string(s) : ("0" + to_string(s))) << "------------------\n";
 }

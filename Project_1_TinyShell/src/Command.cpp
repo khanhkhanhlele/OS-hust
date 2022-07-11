@@ -10,6 +10,7 @@
 #include <direct.h>
 #include "Analyse.h"
 #include "Process2.h"
+#include "Env.h"
 
 #define MAX_CWD_LENS 128
 #define MAX_BUFFER_SIZE 64
@@ -33,6 +34,7 @@ const char *command[] = {
     "pc",
     "calc",
     "run",
+    "env",
 };
 
 /* Mảng các lệnh command*/
@@ -50,6 +52,7 @@ int (*activate_command[])(char **) = {
   &f_pc,
   &f_calc,
   &f_run,
+  &f_env,
 }; 
 
 /**
@@ -117,9 +120,12 @@ int f_help(char **args){
         printf("%-30s%s\n%-30s%s", " mkdir",
 			"Make a new directory.",
             " ", "EXAMPLES: \"mkdir[Foldername]\"\n\n");
-	    printf("%-30s%s\n%-30s%s", " run",
-			"Run .bat file only.",
-            " ", "EXAMPLES: \"run [filename.bat]\"\n\n");
+        printf("%-30s%s\n%-30s%s", " run",
+               "Run .bat file only.",
+               " ", "EXAMPLES: \"run [filename.bat]\"\n\n");
+        printf("%-30s%s\n%-30s%s", " env",
+            "Working with environment variables",
+            " ", "EXAMPLES: \"env all\"\n\n");
         printf("%-30s%s\n%-30s%s\n%-30s%s", " pc",
             "Create process.", " ",
             "You must enter the options in the 2nd argument, such as f and b",
@@ -173,6 +179,15 @@ int f_help(char **args){
         cout << "       run [Filename.bat] : Run .bat file with commands which our shell supports " << endl;
         cout << "EXAMPLE: \"run command.bat\"" << endl;
     }
+    else if (!strcmp(args[1], "env"))
+    {
+        cout << "Supported options:" << endl;
+        cout << "        env all                :Display all environment variables" << endl;
+        cout << "        env [Id]               :Display the value of the environment variable [Id]" << endl;
+        cout << "        env add [Id] [value]   :Add the environment variable [Id] with its value [Value]," << endl;
+        cout << "        env del [Id]           :Delete the environment variable <Id>" << endl;
+        cout << "EXAMPLE: \"env del TEMP \"" << endl;
+    }
     else if(!strcmp(args[1],"pc")){
         cout << "Supported options:" << endl;
         cout << "        list    Show list of all running processes" << endl;
@@ -189,6 +204,10 @@ int f_help(char **args){
         cout << "Exit the TinyShell." << endl;
         cout << "This command does not support any options." << endl; 
     }
+    else if (!strcmp(args[1], "env")){
+        
+    }
+    
     return 0;
 }
 
@@ -321,51 +340,7 @@ int f_echo(char **args){
  * Câu lệnh: cls
  **/
 int f_cls(char **args){ 
-    /**
-     * Clear toàn màn hình console
-     * Câu lệnh: cls
-     **/
-    
-    // if(strcmp(args[0],"cls") == 0){
-    //     HANDLE hConsole; 
-    //     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    //     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    //     SMALL_RECT scrollRect;
-    //     COORD scrollTarget;
-    //     CHAR_INFO fill;
-
-    //     // Get the number of character cells in the current buffer.
-    //     if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
-    //     {
-    //         return 0;
-    //     }
-
-    //     // Scroll the rectangle of the entire buffer.
-    //     scrollRect.Left = 0;
-    //     scrollRect.Top = 0;
-    //     scrollRect.Right = csbi.dwSize.X;
-    //     scrollRect.Bottom = csbi.dwSize.Y;
-
-    //     // Scroll it upwards off the top of the buffer with a magnitude of the entire height.
-    //     scrollTarget.X = 0;
-    //     scrollTarget.Y = (SHORT)(0 - csbi.dwSize.Y);
-
-    //     // Fill with empty spaces with the buffer's default text attribute.
-    //     fill.Char.UnicodeChar = TEXT(' ');
-    //     fill.Attributes = csbi.wAttributes;
-
-    //     // Do the scroll
-    //     ScrollConsoleScreenBuffer(hConsole, &scrollRect, NULL, scrollTarget, &fill);
-
-    //     // Move the cursor to the top left corner too.
-    //     csbi.dwCursorPosition.X = 0;
-    //     csbi.dwCursorPosition.Y = 0;
-
-    //     SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
-    // }
-    // return 0;
     system("cls");
-    //greed();
     return 0;
 }
 
@@ -471,13 +446,13 @@ int f_pc(char **args) {
         cout << "ERROR: Too few argument" << endl;
         return 0;
     }
-    if (strcmp(args[1], "list") == 0) {
+    if (strcmp(args[1], "all") == 0) {
         if (getProcessListAll()) {
             return 0;
         }
         return 1;
     }
-    if (strcmp(args[1], "l") == 0) {
+    if (strcmp(args[1], "list") == 0) {
         if (list()) {
             return 0;
         }
@@ -616,3 +591,71 @@ int f_run(char **args){
     }
     return 0;
 }
+
+int f_env(char **args){
+    if (strcmp(args[1], "all") == 0)
+    {
+        if (args[2]!=NULL)
+        {
+            cout << "Unknown command: \"" << args[2] << "\"\n\n";
+            cout << "To see a list of supported commands, run:\n  env -help\n\n";
+        }
+        else
+        {
+            envList();
+        }
+        return 0;
+    }
+    else if (strcmp(args[1], "add") == 0)
+    {
+        if (args[2]==NULL)
+        {
+            cout << "Wrong command: missing <Id> and <Value>\n\n";
+        }
+        else if (args[3]==NULL)
+        {
+            cout << "Wrong command: missing <Value>\n\n";
+        }
+        else if (args[4]!=NULL)
+        {
+            cout << "Unknown command: \"" << args[4] << "\"\n\n";
+        }
+        else
+        {
+            envAdd(args[2], args[3]);
+        }
+        return 0;
+    }
+    else if (strcmp(args[1], "del") == 0)
+    {
+        if (args[2]==NULL)
+        {
+            cout << "Wrong command: missing <Path>\n\n";
+        }
+        else if (args[3] != NULL)
+        {
+            cout << "Unknown command: \"" << args[3] << "\"\n\n";
+        }
+        else
+        {
+            envDel(args[2]);
+        }
+        return 0;
+    }
+    else if (args[1] != NULL)
+    {
+        if (args[2] != NULL)
+        {
+            cout << "Unknown command: \"" << args[2] << "\"\n\n";
+        }
+        else
+            envFind(args[1]);
+        return 0;
+        }
+    else
+    {
+        cout << "Unknown command: \"" << args[1] << "\"\n\n";
+        return 0;
+    }
+}
+

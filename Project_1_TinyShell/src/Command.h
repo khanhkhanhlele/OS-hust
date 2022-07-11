@@ -39,6 +39,7 @@ int f_pc(char **args);
 int f_calc(char **args);
 int f_run(char **args);
 int f_process(char **args);
+int f_env(char **args); 
 bool cmdCheck(char **args);
 
 int execute(char ** args);
